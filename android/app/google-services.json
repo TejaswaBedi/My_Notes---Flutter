@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "396094504184",
+    "project_id": "notes-keep-flutter-app",
+    "storage_bucket": "notes-keep-flutter-app.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:396094504184:android:73c7cf2a2258de173c4f0d",
+        "android_client_info": {
+          "package_name": "com.ultrapronoob.mynotes"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBGY_Hejzct9PNkTwBOxywKhB05dWJMHZE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
