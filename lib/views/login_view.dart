@@ -1,9 +1,12 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:mynotes/constants/routes.dart';
 import 'package:mynotes/firebase_options.dart';
-import 'dart:developer' as devtools show log;
+
+import 'package:mynotes/utilities/show_error_dialog.dart';
 
 class LoginView extends StatefulWidget {
   const LoginView({super.key});
@@ -69,20 +72,32 @@ class _LoginViewState extends State<LoginView> {
                           await FirebaseAuth.instance
                               .signInWithEmailAndPassword(
                                   email: email, password: password);
-                          Navigator.of(context).pushNamedAndRemoveUntil(
-                            notesRoute,
-                            (route) => false,
-                          );
+                          final user = FirebaseAuth.instance.currentUser;
+                          if (user?.emailVerified ?? false) {
+                            Navigator.of(context).pushNamedAndRemoveUntil(
+                              notesRoute,
+                              (route) => false,
+                            );
+                          } else {
+                            Navigator.of(context).pushNamedAndRemoveUntil(
+                              verifyEmailRoute,
+                              (route) => false,
+                            );
+                          }
                         } on FirebaseAuthException catch (e) {
-                          if (e.code == "user-not-found") {
-                            devtools.log("User not found.");
-                          } else if (e.code == "wrong-password") {
-                            devtools.log("Wromg Password");
+                          if (e.code == "invalid-credential") {
+                            await showErrorDialog(
+                                context, "Invalid Credentials");
+                          } else if (e.code == "channel-error") {
+                            await showErrorDialog(
+                                context, "Empty field/s provided");
+                          } else if (e.code == "invalid-email") {
+                            await showErrorDialog(context, "Invalid email");
+                          } else {
+                            await showErrorDialog(context, "Error: ${e.code}");
                           }
                         } catch (e) {
-                          devtools.log("An error occured !");
-                          devtools.log(e.runtimeType.toString());
-                          devtools.log(e.toString());
+                          await showErrorDialog(context, e.toString());
                         }
                       },
                       child: const Text("Login"),
